@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<table class="table table-borderless">
+    <thead class="border-bottom font-weight-bold">
+        <tr>
+            <td>vehicle-number</td>
+            <td>vehicle-type</td>
+            <td>vehicle-model</td>
+            <td>
+                {% if request.user.is_superadmin%}
+                <a href="{% url 'vehicle_add' %}" class="btn btn-outline-success">
+                    <i class="fas fa-plus"></i> Add New
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vehicle in vehicle_list %}
+            <tr>
+                <td>{{vehicle.vehicle_number}}</td>
+                <td>{{vehicle.type}}</td>
+                <td>{{vehicle.vehicle_model}}</td>
+                
+                <td>{% if request.user.is_superadmin or request.user.is_admin%}
+                    <a href="{% url 'vehicle_update' vehicle.id %}" class="btn text-secondary px-0">
+                        <i class="far fa-edit fa-lg"></i>
+                    </a>
+                    {% endif %}
+                    {% if request.user.is_superadmin%}
+                    <form action="{% url 'vehicle_delete' vehicle.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
