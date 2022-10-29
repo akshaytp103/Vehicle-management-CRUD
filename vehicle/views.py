@@ -1,12 +1,16 @@
 from django.shortcuts import render,redirect
 from .forms import VehicleForm
 from .models import Vehicles
+from django.contrib.auth.decorators import login_required
 # Create your views here.
+
+
+@login_required(login_url='login')
 def Vehicle_list(request):
     context = {'vehicle_list': Vehicles.objects.all()}
     return render(request, "vehicleList.html", context)
 
-
+@login_required(login_url='login')
 def Vehicle_form(request, id=0):
     if request.method == "GET":
         if id == 0:
@@ -25,7 +29,7 @@ def Vehicle_form(request, id=0):
             form.save()
         return redirect('list')
 
-
+@login_required(login_url='login')
 def vehicle_delete(request,id):
     employee = Vehicles.objects.get(pk=id)
     employee.delete()
